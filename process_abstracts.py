@@ -12,6 +12,57 @@ import numpy as np
 from scipy import sparse
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
+# 引入 wordfreq 用于词典检查和连词错误检测
+# 需要先安装: pip install wordfreq
+from wordfreq import zipf_frequency, top_n_list
+
+# 预加载常用英文词表（用于检测连词错误，如 conclusionslower -> conclusions + lower）
+_COMMON_WORDS = frozenset(top_n_list('en', n=50000))
+
+
+def is_compound_error(token):
+    """
+    检查 token 是否由两个常见英文词拼接而成（连词错误）。
+    例如: mydata -> my + data, conclusionslower -> conclusions + lower
+    """
+    n = len(token)
+    # 尝试拆分为 2 个词
+    for i in range(3, n - 3):
+        left = token[:i]
+        right = token[i:]
+        if left in _COMMON_WORDS and right in _COMMON_WORDS:
+            return True
+    return False
+
+
+def dictionary_filter(tokens):
+    """
+    对照正规英文词表过滤异常 token。
+    使用 wordfreq 的 zipf_frequency 和启发式规则。
+    """
+    result = []
+    for token in tokens:
+        freq = zipf_frequency(token, 'en')
+
+        # 1. 连续 3+ 个相同字母（如 aaaaaaa, ccc, eee）→ 过滤
+        if __import__('re').search(r'(.)\1\1', token):
+            continue
+
+        # 2. 完全无元音(含y) 且 在任何语料库中都不存在 → 过滤
+        # 常见无元音缩写如 pdf, phd, gdp, http 等频率通常 > 3.0，不会被误杀
+        if not __import__('re').search(r'[aeiouy]', token) and freq == 0:
+            continue
+
+        # 3. 频率为 0（在任何语料库中都不存在）且长度 > 12 且可拆分为两个常见词 → 过滤
+        # 这能捕获大量 clean_abstracts.py 未能清理的连词错误
+        # 如: conclusionslower, backgroundacademic, mydata 等
+        # 注意：会误杀少量合法前缀合成词（如 antioppressive），但比例很低
+        if freq == 0 and len(token) > 12 and is_compound_error(token):
+            continue
+
+        result.append(token)
+    return result
+
 # ===================== 配置 =====================
 INPUT_CSV = 'abstracts_cleaned.csv'
 STOPWORDS_FILE = 'stopwords.txt'
@@ -277,6 +328,9 @@ def main():
 
             # 步骤3：词形还原 + 近义词消除
             tokens = synonym_normalize(tokens)
+
+            # 步骤3b：对照正规英文词表过滤异常词
+            tokens = dictionary_filter(tokens)
 
             # 再次过滤：还原后可能出现空字符串或单字符
             tokens = [t for t in tokens if len(t) > 1]

@@ -80,6 +80,22 @@
 - `-ed` 黑名单：`bed`, `red`, `need`, `advanced`, `based`, `related`, `involved` 等
 - `-s` 黑名单：`this`, `bus`, `class`, `status`, `crisis`, `focus`, `corpus` 等
 
+### 2.4 词典过滤（Dictionary Filter）
+
+在词形还原之后，脚本会对照大规模英文语料库（通过 `wordfreq` 库）进一步过滤明显不是正常英文单词的 token：
+
+**过滤规则**：
+
+| 规则 | 说明 | 示例被过滤 |
+|------|------|-----------|
+| 连续 3+ 个相同字母 | 正常英文单词几乎没有连续三个相同字母 | `aaaaaaa`, `ccc`, `eee`, `aaapi` |
+| 完全无元音且频率为 0 | 不含 a/e/i/o/u/y 且在任何语料库中都不存在 | `bch`, `bcm`, `bcp`, `tmq` |
+| 频率为 0 + 长度 > 12 + 可拆分为两个常见词 | 捕获 clean_abstracts.py 未能清理的连词错误 | `conclusionslower`, `backgroundacademic`, `mydata`, `activitiesand` |
+
+> **连词错误的来源**：原始 PDF 转换时，部分段落标题（如 `Conclusions`）与后面的正文之间丢失了空格，导致 `ConclusionsLower` 被当成一个词。`clean_abstracts.py` 已修复此问题，词典过滤作为第二道防线。
+
+> **注意**：`wordfreq` 库需要预先安装：`pip install wordfreq`
+
 #### 自定义近义词映射表
 
 在词形还原后，脚本会根据教育/学术领域常见用法，将语义相近的词统一为一个标准形式：

@@ -80,6 +80,11 @@ def clean_text(text):
     for word in LEADING_TITLES:
         text = re.sub(r'(^|[.;]\s+)' + re.escape(word) + r'(\s+)(?=(?-i:[A-Z]|To\s+))', r'\1', text, flags=re.IGNORECASE)
     
+    # 步骤6b: 处理标题和正文之间完全没有空格的情况（如 "ConclusionsMore"）
+    # 仅当出现在行首或句号/分号后，且后面直接跟大写单词或 "To" 时匹配
+    for word in LEADING_TITLES:
+        text = re.sub(r'(^|[.;]\s+)' + re.escape(word) + r'(?=(?-i:[A-Z]|To\s+))', r'\1', text, flags=re.IGNORECASE)
+    
     # 步骤7: 清理多余空格
     text = re.sub(r'\s+', ' ', text)
     text = text.strip()
