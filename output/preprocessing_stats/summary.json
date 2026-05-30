@@ -1,0 +1,47 @@
+﻿[
+  {
+    "metric_en": "document_count",
+    "metric_zh": "摘要数量",
+    "value": 12195
+  },
+  {
+    "metric_en": "vocabulary_size",
+    "metric_zh": "词汇总数",
+    "value": 23818
+  },
+  {
+    "metric_en": "document_term_matrix_shape",
+    "metric_zh": "文档-词矩阵形状",
+    "value": "12195 x 23818"
+  },
+  {
+    "metric_en": "nonzero_elements",
+    "metric_zh": "非零元素数量",
+    "value": 878114
+  },
+  {
+    "metric_en": "sparsity",
+    "metric_zh": "稀疏度",
+    "value": 0.9969768213930355
+  },
+  {
+    "metric_en": "min_doc_length",
+    "metric_zh": "最短文档长度",
+    "value": 6
+  },
+  {
+    "metric_en": "max_doc_length",
+    "metric_zh": "最长文档长度",
+    "value": 445
+  },
+  {
+    "metric_en": "mean_doc_length",
+    "metric_zh": "平均文档长度",
+    "value": 108.38581385813858
+  },
+  {
+    "metric_en": "median_doc_length",
+    "metric_zh": "文档长度中位数",
+    "value": 102
+  }
+]

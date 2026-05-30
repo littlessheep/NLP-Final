@@ -1,0 +1,10 @@
+﻿metric_en,metric_zh,value
+document_count,摘要数量,12195
+vocabulary_size,词汇总数,23818
+document_term_matrix_shape,文档-词矩阵形状,12195 x 23818
+nonzero_elements,非零元素数量,878114
+sparsity,稀疏度,0.9969768213930355
+min_doc_length,最短文档长度,6
+max_doc_length,最长文档长度,445
+mean_doc_length,平均文档长度,108.38581385813858
+median_doc_length,文档长度中位数,102

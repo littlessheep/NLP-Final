@@ -1,0 +1,12 @@
+﻿{
+  "k": 15,
+  "status": "eligible",
+  "perplexity": 1612.9602760628097,
+  "coherence_umass": -1.8473555536272872,
+  "coherence_npmi": 0.09394610959117895,
+  "exclusivity": 0.4580087539888792,
+  "topic_diversity": 0.6711111111111111,
+  "topic_separation": 0.6481881832536592,
+  "mean_max_topic_probability": 0.49662492393713775,
+  "score": 0.6828744566019496
+}

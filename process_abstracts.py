@@ -329,6 +329,9 @@ def main():
             # 步骤3：词形还原 + 近义词消除
             tokens = synonym_normalize(tokens)
 
+            # 词形还原和近义词映射后可能重新产生停用词，例如 studies -> study。
+            tokens = [t for t in tokens if t not in stopwords]
+
             # 步骤3b：对照正规英文词表过滤异常词
             tokens = dictionary_filter(tokens)
 
